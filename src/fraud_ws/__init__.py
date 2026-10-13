@@ -3,7 +3,7 @@ import argparse
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Weakly supervised fraud detection with Snorkel"
+        description="Weakly supervised fraud detection (Snorkel-style label model)"
     )
     parser.add_argument(
         "--rebuild", action="store_true", help="re-download/rebuild features"

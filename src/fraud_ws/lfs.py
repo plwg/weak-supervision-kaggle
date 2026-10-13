@@ -1,16 +1,15 @@
 """Labeling functions encoding fraud-analyst heuristics, as Polars expressions.
 
 Each LF votes FRAUD, LEGIT, or ABSTAINs. They are evaluated column-wise in
-Polars to build Snorkel's label matrix ``L`` (n_rows x n_lfs) directly, which
+Polars to build the Snorkel-style label matrix ``L`` (n_rows x n_lfs) directly, which
 is orders of magnitude faster than Snorkel's row-by-row ``PandasLFApplier``.
-Snorkel is then used on ``L`` for analysis and the LabelModel.
+``fraud_ws.labelmodel`` is then used on ``L`` for analysis and the LabelModel.
 
 Thresholds come from domain priors and from the *unlabeled* feature
 distribution only — no ground-truth labels were used to write or tune them.
 """
 
 import numpy as np
-import pandas as pd
 import polars as pl
 
 ABSTAIN = -1
@@ -81,10 +80,9 @@ LFS: dict[str, tuple[int, pl.Expr]] = {
 LF_NAMES = list(LFS)
 
 
-def apply_lfs(df: pd.DataFrame | pl.DataFrame) -> np.ndarray:
-    """Evaluate all LFs and return Snorkel's label matrix L (int, -1 = abstain)."""
-    frame = pl.from_pandas(df) if isinstance(df, pd.DataFrame) else df
-    L = frame.select(
+def apply_lfs(df: pl.DataFrame) -> np.ndarray:
+    """Evaluate all LFs and return the label matrix L (int, -1 = abstain)."""
+    L = df.select(
         pl.when(cond)
         .then(pl.lit(vote))
         .otherwise(pl.lit(ABSTAIN))

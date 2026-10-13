@@ -1,7 +1,7 @@
 [project]
 name = "fraud-ws"
 version = "0.1.0"
-description = "Weakly supervised fraud detection with Snorkel on a Kaggle dataset (labels hidden)"
+description = "Weakly supervised fraud detection (Snorkel-style label model) on a Kaggle dataset (labels hidden)"
 readme = "README.md"
 authors = [
     { name = "plwg", email = "56353330+plwg@users.noreply.github.com" }
@@ -9,12 +9,8 @@ authors = [
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "kagglehub>=0.3",
-    "pandas>=2.2",
     "polars>=2.0.0",
-    "pyarrow>=26.0.0",
     "scikit-learn>=1.5",
-    "snorkel>=0.10.0",
-    "torch>=2.4",
 ]
 
 [project.scripts]
@@ -24,10 +20,17 @@ fraud-ws = "fraud_ws:main"
 requires = ["uv_build>=0.13.0,<0.14.0"]
 build-backend = "uv_build"
 
-[tool.uv.sources]
-torch = { index = "pytorch-cpu" }
-
 [[tool.uv.index]]
 name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"
 explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "snorkel>=0.10.0",
+    "torch>=2.4",
+]

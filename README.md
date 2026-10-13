@@ -1,7 +1,7 @@
 # fraud-ws: weakly supervised fraud detection with Snorkel
 
 Builds a fraud classifier **without using any training labels**, using
-[Snorkel](https://github.com/snorkel-team/snorkel) weak supervision on the
+[Snorkel](https://github.com/snorkel-team/snorkel)-style weak supervision on the
 Kaggle dataset [`kartik2112/fraud-detection`](https://www.kaggle.com/datasets/kartik2112/fraud-detection)
 (simulated card transactions, 1.3M train / 556k test rows, ~0.5% fraud).
 
@@ -10,14 +10,16 @@ Kaggle dataset [`kartik2112/fraud-detection`](https://www.kaggle.com/datasets/ka
 1. **Download & hide the label** (`data.py`): fetches the CSVs via `kagglehub`, drops
    `is_fraud`, throws away the train labels, and writes the test labels to
    `data/vault/` for final evaluation only.
-2. **Features**: per-card causal (past-only) behaviour: amount vs. the card's
+2. **Features** (Polars): per-card causal (past-only) behaviour: amount vs. the card's
    running median (overall and per category), 1h/24h velocity, time since the
    last transaction, hour, distance, age.
 3. **Labeling functions** (`lfs.py`): 12 analyst heuristics (8 FRAUD, 4 LEGIT)
-   written as **Polars expressions** that build Snorkel's label matrix `L`
-   directly. This is much faster than the row-wise `PandasLFApplier`.
-4. **Snorkel LabelModel** fits LF accuracies from their agreements/disagreements
-   (no labels), using an assumed 1% fraud prior.
+   written as **Polars expressions** that build the Snorkel-style label matrix `L`
+   directly. This is much faster than Snorkel's row-wise `PandasLFApplier`.
+4. **LabelModel** (`labelmodel.py`) fits LF accuracies from their
+   agreements/disagreements (no labels), using an assumed 1% fraud prior. It is a
+   numpy-only port of Snorkel 0.10's `LabelModel`, `MajorityLabelVoter` and
+   `LFAnalysis` (see below).
 5. **End model**: `HistGradientBoostingClassifier` trained on the LabelModel's
    probabilistic labels. Each row is used twice, once per class, weighted by
    that class's probability.
@@ -31,14 +33,14 @@ uv sync
 uv run fraud-ws            # add --rebuild to re-download, --no-reference to skip upper bound
 ```
 
-The full run takes about 80 seconds on CPU.
+The full run takes about 30 seconds on CPU.
 
 ## Results (test set, fraud rate 0.386%)
 
 | Model                    | ROC-AUC | PR-AUC | Precision @ top 0.5% | Recall @ top 0.5% |
 |--------------------------|--------:|-------:|---------------------:|------------------:|
 | MajorityVote             |  0.883  | 0.053  | 0.094 | 0.122 |
-| Snorkel LabelModel       |  0.934  | 0.340  | 0.371 | 0.480 |
+| LabelModel               |  0.934  | 0.340  | 0.371 | 0.480 |
 | End model (weak labels)  |  0.943  | 0.277  | 0.295 | 0.381 |
 | Supervised (true labels) |  0.993  | 0.785  | 0.678 | 0.878 |
 
@@ -52,3 +54,19 @@ precise.
 The LFs were *not* tuned against the test labels, because that would leak the
 label. To improve them, label a small dev set (a few hundred rows) and iterate
 on that.
+
+## Why no Snorkel dependency?
+
+Open-source Snorkel has had no release since 0.10.0 (Feb 2024). It also pulls in
+torch, tensorboard, protobuf, networkx and munkres, and this project only needs
+a few hundred lines of linear algebra from it. `fraud_ws/labelmodel.py`
+reimplements those parts in numpy using the same loss, initialisation, SGD with
+momentum, clamping and permutation tie-break. On this dataset it matches
+Snorkel's probabilities to within 3e-7 and fits about 10x faster.
+
+Snorkel is kept only as a dev dependency, for the parity tests:
+
+```bash
+uv run pytest
+```
+

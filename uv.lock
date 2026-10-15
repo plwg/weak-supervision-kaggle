@@ -8,6 +8,12 @@ resolution-markers = [
     "sys_platform == 'darwin'",
 ]
 
+[manifest]
+members = [
+    "fraud-ws",
+    "ws-labelmodel",
+]
+
 [[package]]
 name = "absl-py"
 version = "2.5.1"
@@ -102,14 +108,7 @@ dependencies = [
     { name = "kagglehub" },
     { name = "polars" },
     { name = "scikit-learn" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pytest" },
-    { name = "snorkel" },
-    { name = "torch", version = "2.14.1", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform == 'darwin'" },
-    { name = "torch", version = "2.14.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform != 'darwin'" },
+    { name = "ws-labelmodel" },
 ]
 
 [package.metadata]
@@ -117,13 +116,7 @@ requires-dist = [
     { name = "kagglehub", specifier = ">=0.3" },
     { name = "polars", specifier = ">=2.0.0" },
     { name = "scikit-learn", specifier = ">=1.5" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "pytest", specifier = ">=9.1.1" },
-    { name = "snorkel", specifier = ">=0.10.0" },
-    { name = "torch", specifier = ">=2.4", index = "https://download.pytorch.org/whl/cpu" },
+    { name = "ws-labelmodel", editable = "packages/ws-labelmodel" },
 ]
 
 [[package]]
@@ -712,4 +705,33 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/a4/34/4dd12fc8bb7d61c91467ec3efe415ffa7d5456f799954b40c5bbaeae470e/werkzeug-3.1.9.tar.gz", hash = "sha256:55ca7c70a75689be937aa27f8ff4b018f06ff4838fc73045560bf0f5a1291060", size = 940188, upload-time = "2026-09-27T18:33:41.637Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a1/38/df03f564f43cec2684823f3cccae1a652ee7face1cbaa76fb223096e64d7/werkzeug-3.1.9-py3-none-any.whl", hash = "sha256:6392e50c78460ba618e5b21f08a71f59c99ce99cdc6cf6e3dd7e6ccca8754fab", size = 228700, upload-time = "2026-09-27T18:33:39.685Z" },
+]
+
+[[package]]
+name = "ws-labelmodel"
+version = "0.1.0"
+source = { editable = "packages/ws-labelmodel" }
+default-groups = ["dev", "parity"]
+dependencies = [
+    { name = "numpy" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+parity = [
+    { name = "snorkel" },
+    { name = "torch", version = "2.14.1", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform == 'darwin'" },
+    { name = "torch", version = "2.14.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform != 'darwin'" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "numpy", specifier = ">=1.24" }]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=9.1.1" }]
+parity = [
+    { name = "snorkel", specifier = ">=0.10.0" },
+    { name = "torch", specifier = ">=2.4", index = "https://download.pytorch.org/whl/cpu" },
 ]

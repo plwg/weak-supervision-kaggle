@@ -12,13 +12,13 @@ from sklearn.metrics import (
     roc_auc_score,
 )
 from sklearn.pipeline import Pipeline, make_pipeline, make_union
-
-from fraud_ws.labelmodel import (
+from ws_labelmodel import (
     LabelModel,
     labeled_mask,
     lf_summary,
     majority_vote_proba,
 )
+
 from spam_ws import data
 from spam_ws.lfs import LF_NAMES, apply_lfs
 

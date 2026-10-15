@@ -16,10 +16,10 @@ Kaggle dataset [`kartik2112/fraud-detection`](https://www.kaggle.com/datasets/ka
 3. **Labeling functions** (`lfs.py`): 12 analyst heuristics (8 FRAUD, 4 LEGIT)
    written as **Polars expressions** that build the Snorkel-style label matrix `L`
    directly. This is much faster than Snorkel's row-wise `PandasLFApplier`.
-4. **LabelModel** (`labelmodel.py`) fits LF accuracies from their
+4. **LabelModel** (`ws_labelmodel`, see below) fits LF accuracies from their
    agreements/disagreements (no labels), using an assumed 1% fraud prior. It is a
    numpy-only port of Snorkel 0.10's `LabelModel`, `MajorityLabelVoter` and
-   `LFAnalysis` (see below).
+   `LFAnalysis`.
 5. **End model**: `HistGradientBoostingClassifier` trained on the LabelModel's
    probabilistic labels. Each row is used twice, once per class, weighted by
    that class's probability.
@@ -61,8 +61,8 @@ The same approach on text: the Kaggle dataset
 [`uciml/sms-spam-collection-dataset`](https://www.kaggle.com/datasets/uciml/sms-spam-collection-dataset)
 (UCI SMS Spam Collection). There are 5,169 unique messages after exact
 duplicates are dropped, split 70/30 into 3,575 train and 1,594 test messages,
-and about 12% are spam. It lives in `src/spam_ws/` and reuses
-`fraud_ws.labelmodel`.
+and about 12% are spam. It lives in `src/spam_ws/` and uses the
+same `ws_labelmodel` package.
 
 - **Data** (`spam_ws/data.py`): deduplicates before splitting so the same text
   can't be in both train and test. Labels go into `data/sms/vault/`.
@@ -95,18 +95,22 @@ like), which is only 40% precise on test because people shout in ordinary texts
 too. The LabelModel finds that without labels and rates it at 46%, while every
 other LF gets 85-100%.
 
-## Why no Snorkel dependency?
+## The `ws-labelmodel` package
 
 Open-source Snorkel has had no release since 0.10.0 (Feb 2024). It also pulls in
 torch, tensorboard, protobuf, networkx and munkres, and this project only needs
-a few hundred lines of linear algebra from it. `fraud_ws/labelmodel.py`
-reimplements those parts in numpy using the same loss, initialisation, SGD with
-momentum, clamping and permutation tie-break. On this dataset it matches
-Snorkel's probabilities to within 3e-7 and fits about 10x faster.
+a few hundred lines of linear algebra from it. Those parts are reimplemented in
+numpy in their own uv workspace package,
+[`packages/ws-labelmodel/`](packages/ws-labelmodel/README.md), which depends
+only on numpy and can be reused in other projects. It uses the same loss,
+initialisation, SGD with momentum, clamping and permutation tie-break as
+Snorkel. On the fraud data it matches Snorkel's probabilities to within 3e-7
+and fits about 10x faster. Its README covers the API, input validation and
+error messages, installation in other projects, and how to run its tests.
 
-Snorkel is kept only as a dev dependency, for the parity tests:
+Snorkel and torch are only needed for the package's parity tests:
 
 ```bash
-uv run pytest
+cd packages/ws-labelmodel && uv run pytest
 ```
 

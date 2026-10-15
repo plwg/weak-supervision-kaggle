@@ -3,7 +3,7 @@
 Each LF votes FRAUD, LEGIT, or ABSTAINs. They are evaluated column-wise in
 Polars to build the Snorkel-style label matrix ``L`` (n_rows x n_lfs) directly, which
 is orders of magnitude faster than Snorkel's row-by-row ``PandasLFApplier``.
-``fraud_ws.labelmodel`` is then used on ``L`` for analysis and the LabelModel.
+``ws_labelmodel`` is then used on ``L`` for analysis and the LabelModel.
 
 Thresholds come from domain priors and from the *unlabeled* feature
 distribution only — no ground-truth labels were used to write or tune them.

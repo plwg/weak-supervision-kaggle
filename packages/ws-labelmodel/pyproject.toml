@@ -1,0 +1,41 @@
+[project]
+name = "ws-labelmodel"
+version = "0.1.0"
+description = "Numpy-only port of Snorkel 0.10's LabelModel, MajorityLabelVoter and LF analysis"
+readme = "README.md"
+authors = [
+    { name = "plwg", email = "56353330+plwg@users.noreply.github.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"
+
+# Snorkel and torch are only needed for the parity tests (tests/test_parity.py),
+# which are skipped when they are not installed.
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+parity = [
+    "snorkel>=0.10.0",
+    "torch>=2.4",
+]
+
+[tool.uv]
+default-groups = ["dev", "parity"]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[tool.ruff.lint.isort]
+known-first-party = ["ws_labelmodel"]

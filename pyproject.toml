@@ -11,6 +11,7 @@ dependencies = [
     "kagglehub>=0.3",
     "polars>=2.0.0",
     "scikit-learn>=1.5",
+    "ws-labelmodel",
 ]
 
 [project.scripts]
@@ -24,17 +25,8 @@ build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = ["fraud_ws", "spam_ws"]
 
-[[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
-explicit = true
+[tool.uv.workspace]
+members = ["packages/*"]
 
 [tool.uv.sources]
-torch = { index = "pytorch-cpu" }
-
-[dependency-groups]
-dev = [
-    "pytest>=9.1.1",
-    "snorkel>=0.10.0",
-    "torch>=2.4",
-]
+ws-labelmodel = { workspace = true }

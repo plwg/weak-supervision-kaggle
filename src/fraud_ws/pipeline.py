@@ -9,14 +9,14 @@ from sklearn.metrics import (
     recall_score,
     roc_auc_score,
 )
-
-from fraud_ws import data
-from fraud_ws.labelmodel import (
+from ws_labelmodel import (
     LabelModel,
     labeled_mask,
     lf_summary,
     majority_vote_proba,
 )
+
+from fraud_ws import data
 from fraud_ws.lfs import LF_NAMES, apply_lfs
 
 # Assumed prior: card fraud is typically well under 1-2% of transactions.

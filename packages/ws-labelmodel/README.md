@@ -172,3 +172,10 @@ create a local `.venv`; then the same commands work from the package directory.
 Changes to the numerical code in `fit`/`predict_proba` must keep
 `tests/test_parity.py` passing, since the Snorkel match is the main
 correctness guarantee.
+
+## License
+
+Apache License 2.0 (see `LICENSE`). The code is ported from
+[Snorkel](https://github.com/snorkel-team/snorkel) 0.10.0, which is also
+Apache-2.0 and copyright the Snorkel team. `labelmodel.py` is a modified
+reimplementation of it.

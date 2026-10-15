@@ -111,6 +111,11 @@ dependencies = [
     { name = "ws-labelmodel" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "kagglehub", specifier = ">=0.3" },
@@ -118,6 +123,9 @@ requires-dist = [
     { name = "scikit-learn", specifier = ">=1.5" },
     { name = "ws-labelmodel", editable = "packages/ws-labelmodel" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=9.1.1" }]
 
 [[package]]
 name = "fsspec"

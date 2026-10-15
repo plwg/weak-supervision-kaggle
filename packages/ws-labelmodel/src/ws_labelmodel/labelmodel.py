@@ -14,6 +14,12 @@ means the LF abstained and ``k`` is the number of classes.
 Invalid input raises ``ValueError`` (or ``TypeError`` for a non-numeric
 array) with a message naming the problem; using a model before ``fit`` raises
 ``NotFittedError``.
+
+Attribution: the algorithms are ported from Snorkel 0.10.0
+(https://github.com/snorkel-team/snorkel), Copyright the Snorkel team,
+licensed under the Apache License 2.0. This file is a modified
+reimplementation in numpy, with added input validation, and is also
+distributed under the Apache License 2.0 (see LICENSE).
 """
 
 import warnings

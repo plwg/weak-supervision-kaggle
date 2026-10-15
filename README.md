@@ -114,3 +114,23 @@ Snorkel and torch are only needed for the package's parity tests:
 cd packages/ws-labelmodel && uv run pytest
 ```
 
+## Data sources and license
+
+Neither dataset is included in this repo. They are downloaded from Kaggle at
+run time into the gitignored `data/` directory.
+
+- **Card fraud**: [`kartik2112/fraud-detection`](https://www.kaggle.com/datasets/kartik2112/fraud-detection),
+  CC0 (public domain). Simulated transactions generated with
+  [Sparkov](https://github.com/namebrandon/Sparkov_Data_Generation); the
+  people in it are not real.
+- **SMS spam**: [`uciml/sms-spam-collection-dataset`](https://www.kaggle.com/datasets/uciml/sms-spam-collection-dataset),
+  a mirror of the [UCI SMS Spam Collection](https://archive.ics.uci.edu/dataset/228/sms+spam+collection),
+  CC BY 4.0. Please cite: T. A. Almeida, J. M. Gómez Hidalgo and A. Yamakami,
+  "Contributions to the Study of SMS Spam Filtering: New Collection and
+  Results", *Proceedings of the 2011 ACM Symposium on Document Engineering
+  (DocEng '11)*.
+
+The code is licensed under the Apache License 2.0 (see `LICENSE`). The label
+model in `packages/ws-labelmodel/` is a modified port of
+[Snorkel](https://github.com/snorkel-team/snorkel) 0.10.0, which is also
+Apache-2.0.

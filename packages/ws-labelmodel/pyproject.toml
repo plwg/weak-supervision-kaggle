@@ -3,6 +3,8 @@ name = "ws-labelmodel"
 version = "0.1.0"
 description = "Numpy-only port of Snorkel 0.10's LabelModel, MajorityLabelVoter and LF analysis"
 readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 authors = [
     { name = "plwg", email = "56353330+plwg@users.noreply.github.com" }
 ]

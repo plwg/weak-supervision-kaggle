@@ -3,6 +3,8 @@ name = "fraud-ws"
 version = "0.1.0"
 description = "Weak supervision (Snorkel-style label model) on Kaggle datasets with hidden labels: card fraud and SMS spam"
 readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 authors = [
     { name = "plwg", email = "56353330+plwg@users.noreply.github.com" }
 ]
@@ -30,3 +32,10 @@ members = ["packages/*"]
 
 [tool.uv.sources]
 ws-labelmodel = { workspace = true }
+
+# pytest is here so `uv sync` at the root keeps it installed for ty/pyrefly,
+# which type-check packages/ws-labelmodel/tests too.
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]

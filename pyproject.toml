@@ -1,7 +1,7 @@
 [project]
 name = "fraud-ws"
 version = "0.1.0"
-description = "Weakly supervised fraud detection (Snorkel-style label model) on a Kaggle dataset (labels hidden)"
+description = "Weak supervision (Snorkel-style label model) on Kaggle datasets with hidden labels: card fraud and SMS spam"
 readme = "README.md"
 authors = [
     { name = "plwg", email = "56353330+plwg@users.noreply.github.com" }
@@ -15,10 +15,14 @@ dependencies = [
 
 [project.scripts]
 fraud-ws = "fraud_ws:main"
+spam-ws = "spam_ws:main"
 
 [build-system]
 requires = ["uv_build>=0.13.0,<0.14.0"]
 build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = ["fraud_ws", "spam_ws"]
 
 [[tool.uv.index]]
 name = "pytorch-cpu"
